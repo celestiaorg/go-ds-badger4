@@ -9,11 +9,11 @@ import (
 	"sync"
 	"time"
 
-	badger "github.com/dgraph-io/badger/v3"
+	"github.com/dgraph-io/badger/v4"
 	ds "github.com/ipfs/go-datastore"
 	dsq "github.com/ipfs/go-datastore/query"
 	logger "github.com/ipfs/go-log/v2"
-	goprocess "github.com/jbenet/goprocess"
+	"github.com/jbenet/goprocess"
 	"go.uber.org/zap"
 )
 

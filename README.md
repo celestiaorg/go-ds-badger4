@@ -1,4 +1,4 @@
-# go-ds-badger3
+# go-ds-badger4
 
 [![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)
 [![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)[![Go Reference](https://pkg.go.dev/badge/github.com/dgraph-io/badger/v3.svg)](https://pkg.go.dev/github.com/dgraph-io/badger/v3)
@@ -13,7 +13,7 @@
 
 ## Documentation
 
-https://pkg.go.dev/github.com/dgraph-io/badger/v3
+https://pkg.go.dev/github.com/dgraph-io/badger/v4
 
 ## Contribute
 
