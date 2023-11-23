@@ -264,20 +264,26 @@ func (d *Datastore) Put(ctx context.Context, key ds.Key, value []byte) error {
 		return ErrClosed
 	}
 
-	txn := d.newImplicitTransaction(false)
-	defer txn.discard()
+	b := &batch{d, d.DB.NewWriteBatch()}
+	// Ensure that incomplete transaction resources are cleaned up in case
+	// batch is abandoned.
+	runtime.SetFinalizer(b, func(b *batch) {
+		b.cancel()
+		log.Error("batch not committed or canceled")
+	})
+	defer b.cancel()
 
 	if d.ttl > 0 {
-		if err := txn.putWithTTL(key, value, d.ttl); err != nil {
+		if err := b.putWithTTL(key, value, d.ttl); err != nil {
 			return err
 		}
 	} else {
-		if err := txn.put(key, value); err != nil {
+		if err := b.put(key, value); err != nil {
 			return err
 		}
 	}
 
-	return txn.commit()
+	return b.commit()
 }
 
 func (d *Datastore) Sync(ctx context.Context, prefix ds.Key) error {
