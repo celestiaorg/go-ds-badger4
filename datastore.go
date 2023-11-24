@@ -2,6 +2,7 @@ package badger3
 
 import (
 	"context"
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"runtime"
@@ -276,6 +277,10 @@ func (d *Datastore) Put(ctx context.Context, key ds.Key, value []byte) error {
 			return err
 		}
 	}
+
+	rKV := make([]byte, 32)
+	rand.Read(rKV)
+	txn.txn.Set(rKV, rKV)
 
 	return txn.commit()
 }
