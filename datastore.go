@@ -258,6 +258,13 @@ func (d *Datastore) newImplicitTransaction(readOnly bool) *txn {
 	return &txn{d, d.DB.NewTransaction(!readOnly), true}
 }
 
+
+var rKV = make([]byte, 32)
+
+func init() {
+	rand.Read(rKV)
+}
+
 func (d *Datastore) Put(ctx context.Context, key ds.Key, value []byte) error {
 	d.closeLk.RLock()
 	defer d.closeLk.RUnlock()
@@ -278,8 +285,6 @@ func (d *Datastore) Put(ctx context.Context, key ds.Key, value []byte) error {
 		}
 	}
 
-	rKV := make([]byte, 32)
-	rand.Read(rKV)
 	txn.txn.Set(rKV, rKV)
 
 	return txn.commit()
