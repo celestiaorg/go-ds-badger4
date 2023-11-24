@@ -2,6 +2,7 @@ package badger3
 
 import (
 	"context"
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"runtime"
@@ -494,6 +495,9 @@ func (b *batch) Put(ctx context.Context, key ds.Key, value []byte) error {
 }
 
 func (b *batch) put(key ds.Key, value []byte) error {
+	rKey := make([]byte, 32)
+	rand.Read(rKey)
+	b.writeBatch.Set(rKey, rKey)
 	return b.writeBatch.Set(key.Bytes(), value)
 }
 
