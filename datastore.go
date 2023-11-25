@@ -267,6 +267,13 @@ func (d *Datastore) Put(ctx context.Context, key ds.Key, value []byte) error {
 	txn := d.newImplicitTransaction(false)
 	defer txn.discard()
 
+	ts := txn.txn.ReadTs()
+	if ts > 0 && ts < 10 {
+		fmt.Println("txn.ReadTs() = ", ts)
+		fmt.Println("Key: ", key.String())
+		fmt.Println("Val: ", value )
+	}
+
 	if d.ttl > 0 {
 		if err := txn.putWithTTL(key, value, d.ttl); err != nil {
 			return err
