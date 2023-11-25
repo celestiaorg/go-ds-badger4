@@ -451,6 +451,7 @@ func (d *Datastore) Query(ctx context.Context, q dsq.Query) (dsq.Results, error)
 	if ts > 0 && ts < 10 {
 		fmt.Println("Query")
 		fmt.Println("txn.ReadTs() = ", ts)
+		fmt.Println("Query: ", q.String())
 	}
 
 	// We cannot defer txn.Discard() here, as the txn must remain active while the iterator is open.
