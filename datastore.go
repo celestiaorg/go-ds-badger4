@@ -265,7 +265,22 @@ func (d *Datastore) Put(ctx context.Context, key ds.Key, value []byte) error {
 	}
 
 	txn := d.newImplicitTransaction(false)
+<<<<<<< Updated upstream
 	defer txn.discard()
+=======
+	ts := txn.txn.ReadTs()
+	defer func() {
+		txn.discard()
+		if ts < 10 {
+			fmt.Println("Put Close ", ts)
+		}
+	}()
+
+	if ts < 10 {
+		fmt.Println("Put Start ", ts)
+		fmt.Println("Key: ", key.String())
+	}
+>>>>>>> Stashed changes
 
 	if d.ttl > 0 {
 		if err := txn.putWithTTL(key, value, d.ttl); err != nil {
@@ -302,7 +317,23 @@ func (d *Datastore) PutWithTTL(ctx context.Context, key ds.Key, value []byte, tt
 	}
 
 	txn := d.newImplicitTransaction(false)
+<<<<<<< Updated upstream
 	defer txn.discard()
+=======
+	ts := txn.txn.ReadTs()
+	defer func() {
+		txn.discard()
+		if ts < 10 {
+			fmt.Println("PutWithTTL Close")
+		}
+	}()
+
+	if  ts < 10 {
+		fmt.Println("PutWithTTL Start")
+		fmt.Println("txn.ReadTs() = ", ts)
+		fmt.Println("Key: ", key.String())
+	}
+>>>>>>> Stashed changes
 
 	if err := txn.putWithTTL(key, value, ttl); err != nil {
 		return err
@@ -319,7 +350,19 @@ func (d *Datastore) SetTTL(ctx context.Context, key ds.Key, ttl time.Duration) e
 	}
 
 	txn := d.newImplicitTransaction(false)
-	defer txn.discard()
+	defer func() {
+		txn.discard()
+		if txn.txn.ReadTs() < 10 {
+			fmt.Println("SetTTL Close")
+		}
+	}()
+
+	ts := txn.txn.ReadTs()
+	if  ts < 10 {
+		fmt.Println("SetTTL Start")
+		fmt.Println("txn.ReadTs() = ", ts)
+		fmt.Println("Key: ", key.String())
+	}
 
 	if err := txn.setTTL(key, ttl); err != nil {
 		return err
@@ -336,7 +379,19 @@ func (d *Datastore) GetExpiration(ctx context.Context, key ds.Key) (time.Time, e
 	}
 
 	txn := d.newImplicitTransaction(false)
-	defer txn.discard()
+	defer func() {
+		txn.discard()
+		if txn.txn.ReadTs() < 10 {
+			fmt.Println("GetExpiration Close")
+		}
+	}()
+
+	ts := txn.txn.ReadTs()
+	if ts < 10 {
+		fmt.Println("GetExpiration Start")
+		fmt.Println("txn.ReadTs() = ", ts)
+		fmt.Println("Key: ", key.String())
+	}
 
 	return txn.getExpiration(key)
 }
@@ -349,8 +404,22 @@ func (d *Datastore) Get(ctx context.Context, key ds.Key) (value []byte, err erro
 	}
 
 	txn := d.newImplicitTransaction(true)
-	defer txn.discard()
+	defer func() {
+		txn.discard()
+		if txn.txn.ReadTs() < 10 {
+			fmt.Println("Get Close ", txn.txn.ReadTs())
+		}
+	}()
 
+<<<<<<< Updated upstream
+=======
+	ts := txn.txn.ReadTs()
+	if ts < 10 {
+		fmt.Println("Get Start ", ts)
+		fmt.Println("Key: ", key.String())
+	}
+
+>>>>>>> Stashed changes
 	return txn.get(key)
 }
 
@@ -362,7 +431,21 @@ func (d *Datastore) Has(ctx context.Context, key ds.Key) (bool, error) {
 	}
 
 	txn := d.newImplicitTransaction(true)
+<<<<<<< Updated upstream
 	defer txn.discard()
+=======
+	defer func() {
+		txn.discard()
+		if txn.txn.ReadTs() < 10 {
+			fmt.Println("Haz Close ", txn.txn.ReadTs())
+		}
+	}()
+	ts := txn.txn.ReadTs()
+	if ts < 10 {
+		fmt.Println("Haz Start ", ts)
+		fmt.Println("Key: ", key.String())
+	}
+>>>>>>> Stashed changes
 
 	return txn.has(key)
 }
@@ -375,8 +458,22 @@ func (d *Datastore) GetSize(ctx context.Context, key ds.Key) (size int, err erro
 	}
 
 	txn := d.newImplicitTransaction(true)
-	defer txn.discard()
+	defer func() {
+		txn.discard()
+		if txn.txn.ReadTs() < 10 {
+			fmt.Println("GetSize Close ", txn.txn.ReadTs())
+		}
+	}()
 
+<<<<<<< Updated upstream
+=======
+	ts := txn.txn.ReadTs()
+	if ts < 10 {
+		fmt.Println("GetSize Start ", ts)
+		fmt.Println("Key: ", key.String())
+	}
+
+>>>>>>> Stashed changes
 	return txn.getSize(key)
 }
 
@@ -385,7 +482,23 @@ func (d *Datastore) Delete(ctx context.Context, key ds.Key) error {
 	defer d.closeLk.RUnlock()
 
 	txn := d.newImplicitTransaction(false)
+<<<<<<< Updated upstream
 	defer txn.discard()
+=======
+	ts := txn.txn.ReadTs()
+	defer func() {
+		txn.discard()
+		if ts < 10 {
+			fmt.Println("Delete Close")
+		}
+	}()
+
+	if ts < 10 {
+		fmt.Println("Delete Start")
+		fmt.Println("txn.ReadTs() = ", ts)
+		fmt.Println("Key: ", key.String())
+	}
+>>>>>>> Stashed changes
 
 	err := txn.delete(key)
 	if err != nil {
@@ -403,6 +516,16 @@ func (d *Datastore) Query(ctx context.Context, q dsq.Query) (dsq.Results, error)
 	}
 
 	txn := d.newImplicitTransaction(true)
+<<<<<<< Updated upstream
+=======
+	ts := txn.txn.ReadTs()
+	if ts < 10 {
+		fmt.Println("Query")
+		fmt.Println("txn.ReadTs() = ", ts)
+		fmt.Println("Query: ", q.String())
+	}
+
+>>>>>>> Stashed changes
 	// We cannot defer txn.Discard() here, as the txn must remain active while the iterator is open.
 	// https://github.com/dgraph-io/badger/commit/b1ad1e93e483bbfef123793ceedc9a7e34b09f79
 	// The closing logic in the query goprocess takes care of discarding the implicit transaction.
@@ -800,7 +923,11 @@ func (t *txn) query(q dsq.Query) (dsq.Results, error) {
 		// we're done we must discard the transaction. It's safe to
 		// discard the txn it because it contains the iterator only.
 		if t.implicit {
-			defer t.discard()
+			fmt.Println("Query Start: ", q.String())
+			defer func() {
+				fmt.Println("Query Close: ", q.String())
+				t.discard()
+			}()
 		}
 
 		defer it.Close()
