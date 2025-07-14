@@ -478,6 +478,13 @@ func (d *Datastore) gcOnce() error {
 	if d.closed {
 		return ErrClosed
 	}
+
+	compactors := min(max(runtime.NumCPU()/2, 2), d.DB.Opts().MaxLevels)
+	err := d.DB.Flatten(compactors)
+	if err != nil {
+		return fmt.Errorf("flattenning: %w", err)
+	}
+
 	return d.DB.RunValueLogGC(d.gcDiscardRatio)
 }
 
