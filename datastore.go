@@ -383,6 +383,11 @@ func (d *Datastore) Delete(ctx context.Context, key ds.Key) error {
 	d.closeLk.RLock()
 	defer d.closeLk.RUnlock()
 
+	batch, ok := GetBatch(ctx)
+	if ok {
+		return batch.Delete(ctx, key)
+	}
+
 	txn := d.newImplicitTransaction(false)
 	defer txn.discard()
 
